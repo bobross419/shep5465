@@ -1,0 +1,6 @@
+<html>
+  <body>
+    <h1>Server <%= node['apache']['sites'][@name]['server_name'] %> is undergoing maintenance.</h1>
+    Please contact <%= node['apache']['sites'][@name]['owner'] %> at <%= node['apache']['sites'][@name]['server_admin'] %> for immediate assistance.
+  </body>
+</html>

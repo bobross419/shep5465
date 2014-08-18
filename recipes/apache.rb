@@ -27,3 +27,15 @@ web_app site_name do
   customlog site['customlog']
   loglevel site['loglevel']
 end
+
+template "#{site['docroot']}/current/index.html" do
+  source 'maintenance.html.erb'
+  variables(
+    :name => site_name
+  )
+  action :create
+end
+
+service 'apache2' do
+  action :restart
+end
