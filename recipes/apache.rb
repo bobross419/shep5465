@@ -1,10 +1,13 @@
-# Include the necessary recipes.
-%w(rackspace_iptables apt apache2::default).each do |recipe|
+%w(rackspace_iptables apache2::default).each do |recipe|
   include_recipe recipe
 end
 
-site_name = 'de1.sheppyreno.com'
+site_name = Chef::Config[:node_name]
 site = node['apache']['sites'][site_name]
+
+# No longer needed since I ripped
+# out the DNS part
+# domain = site_name.split('.').pop(2).join('.')
 
 add_iptables_rule('INPUT', "-m tcp -p tcp --dport #{site['port']} -j ACCEPT", 100, 'Allow access to apache')
 
@@ -39,3 +42,18 @@ end
 service 'apache2' do
   action :restart
 end
+
+# Really wanted to get this working
+# but the rackspace-dns package has issues
+# when trying to include it.  Specifically
+# it fails because libxslt-dev isn't available
+# in Ubuntu 14.04 :(
+# require 'chef/data_bag'
+#
+# if Chef::DataBag.list.key?('rackspace')
+#  rsdns_record site['server_name'] do
+#    domain domain
+#    value node['ipaddress']
+#    type 'A'
+#  end
+# end
